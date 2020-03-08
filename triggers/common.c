@@ -615,13 +615,13 @@ void pgq_prepare_event(struct PgqTriggerEvent *ev, TriggerData *tg, bool newstyl
 	/*
 	 * Do the backup, if requested.
 	 */
-	if (ev->tgargs->backup) {
+	if (ev->tgargs->backup && ev->op_type_str == "UPDATE") {
 		ev->field[EV_EXTRA2] = pgq_init_varbuf();
 		pgq_jsonenc_row(ev, tg->tg_trigtuple, ev->field[EV_EXTRA2]);
 		ev->tgargs->backup_url = false;
 	}
 
-	if (ev->tgargs->backup_url) {
+	if (ev->tgargs->backup_url && ev->op_type_str == "UPDATE") {
 		ev->field[EV_EXTRA2] = pgq_init_varbuf();
 		pgq_urlenc_row(ev, tg->tg_trigtuple, ev->field[EV_EXTRA2]);
 	}
