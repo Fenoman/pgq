@@ -226,13 +226,15 @@ static void pgq_jsonenc_row(PgqTriggerEvent *ev, HeapTuple row, StringInfo buf)
 			break;
 		
 		case JSONOID:
-			col_value = SPI_getvalue(row, tupdesc, i + 1);
-			pgq_encode_cstring(buf, col_value, TBUF_SKIP_JSON);
+			appendStringInfoString(buf, DatumGetTextP(col_datum));
+			//col_value = SPI_getvalue(row, tupdesc, i + 1);
+			//pgq_encode_cstring(buf, col_value, TBUF_SKIP_JSON);
 			break;
 
 		case JSONBOID:
-			col_value = SPI_getvalue(row, tupdesc, i + 1);
-			pgq_encode_cstring(buf, col_value, TBUF_SKIP_JSON);
+			appendStringInfoString(buf, DatumGetTextP(col_datum));
+			//col_value = SPI_getvalue(row, tupdesc, i + 1);
+			//pgq_encode_cstring(buf, col_value, TBUF_SKIP_JSON);
 			break;
 
 		default:
