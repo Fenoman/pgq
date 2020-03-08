@@ -233,6 +233,7 @@ static void pgq_jsonenc_row(PgqTriggerEvent *ev, HeapTuple row, StringInfo buf)
 			break;
 
 		case JSONBOID:
+			col_value = SPI_getvalue(row, tupdesc, i + 1);
 			appendStringInfoString(buf, col_value);
 			//col_value = SPI_getvalue(row, tupdesc, i + 1);
 			//pgq_encode_cstring(buf, col_value, TBUF_SKIP_JSON);
