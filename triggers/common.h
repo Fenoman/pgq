@@ -100,7 +100,7 @@ int pgqtriga_make_sql(PgqTriggerEvent *ev, StringInfo sql);
 
 /* logutriga.c */
 void pgq_urlenc_row(PgqTriggerEvent *ev, HeapTuple row, StringInfo buf);
-static void pgq_jsonenc_row(PgqTriggerEvent *ev, HeapTuple row, StringInfo buf);
+void pgq_jsonenc_row(PgqTriggerEvent *ev, HeapTuple row, StringInfo buf);
 
 int pgq_is_interesting_change(PgqTriggerEvent *ev, TriggerData *tg);
 

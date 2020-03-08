@@ -144,7 +144,7 @@ static void date_to_json(Datum val, StringInfo dst)
  * Convert row to JSON
  */
 
-static void pgq_jsonenc_row(PgqTriggerEvent *ev, HeapTuple row, StringInfo buf)
+void pgq_jsonenc_row(PgqTriggerEvent *ev, HeapTuple row, StringInfo buf)
 {
 	Oid col_type;
 	Datum col_datum;
