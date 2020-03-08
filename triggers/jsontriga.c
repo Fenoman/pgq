@@ -228,15 +228,11 @@ static void pgq_jsonenc_row(PgqTriggerEvent *ev, HeapTuple row, StringInfo buf)
 		case JSONOID:
 			col_value = SPI_getvalue(row, tupdesc, i + 1);
 			appendStringInfoString(buf, col_value);
-			//col_value = SPI_getvalue(row, tupdesc, i + 1);
-			//pgq_encode_cstring(buf, col_value, TBUF_SKIP_JSON);
 			break;
 
 		case JSONBOID:
 			col_value = SPI_getvalue(row, tupdesc, i + 1);
 			appendStringInfoString(buf, col_value);
-			//col_value = SPI_getvalue(row, tupdesc, i + 1);
-			//pgq_encode_cstring(buf, col_value, TBUF_SKIP_JSON);
 			break;
 
 		default:
@@ -290,7 +286,7 @@ static void fill_json_type(PgqTriggerEvent *ev, HeapTuple row, StringInfo ev_typ
  *
  * Queue events will be in format:
  *    ev_type   - operation type, I/U/D
- *    ev_data   - urlencoded column values
+ *    ev_data   - json column values
  *    ev_extra1 - table name
  *    ev_extra2 - optional urlencoded backup
  */

@@ -615,7 +615,8 @@ void pgq_prepare_event(struct PgqTriggerEvent *ev, TriggerData *tg, bool newstyl
 	 */
 	if (ev->tgargs->backup) {
 		ev->field[EV_EXTRA2] = pgq_init_varbuf();
-		pgq_urlenc_row(ev, tg->tg_trigtuple, ev->field[EV_EXTRA2]);
+		pgq_jsonenc_row(ev, tg->tg_trigtuple, ev->field[EV_EXTRA2]);
+		//pgq_urlenc_row(ev, tg->tg_trigtuple, ev->field[EV_EXTRA2]);
 	}
 }
 

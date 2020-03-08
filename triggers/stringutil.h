@@ -3,8 +3,7 @@ enum PgqEncode {
 	TBUF_QUOTE_IDENT,
 	TBUF_QUOTE_LITERAL,
 	TBUF_QUOTE_URLENC,
-	TBUF_QUOTE_JSON,
-	TBUF_SKIP_JSON
+	TBUF_QUOTE_JSON
 };
 
 StringInfo pgq_init_varbuf(void);
