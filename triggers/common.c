@@ -459,6 +459,8 @@ static void parse_newstyle_args(PgqTriggerEvent *ev, TriggerData *tg)
 			ev->tgargs->pkey_list = MemoryContextStrdup(tbl_cache_ctx, arg + 5);
 		else if (strcmp(arg, "backup") == 0)
 			ev->tgargs->backup = true;
+		else if (strcmp(arg, "backup_url") == 0)
+			ev->tgargs->backup_url = true;
 		else if (strcmp(arg, "deny") == 0)
 			ev->tgargs->deny = true;
 		else if (strncmp(arg, "ev_extra4=", 10) == 0)
@@ -616,7 +618,12 @@ void pgq_prepare_event(struct PgqTriggerEvent *ev, TriggerData *tg, bool newstyl
 	if (ev->tgargs->backup) {
 		ev->field[EV_EXTRA2] = pgq_init_varbuf();
 		pgq_jsonenc_row(ev, tg->tg_trigtuple, ev->field[EV_EXTRA2]);
-		//pgq_urlenc_row(ev, tg->tg_trigtuple, ev->field[EV_EXTRA2]);
+		ev->tgargs->backup_url = false;
+	}
+
+	if (ev->tgargs->backup_url) {
+		ev->field[EV_EXTRA2] = pgq_init_varbuf();
+		pgq_urlenc_row(ev, tg->tg_trigtuple, ev->field[EV_EXTRA2]);
 	}
 }
 

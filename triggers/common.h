@@ -59,6 +59,7 @@ struct PgqTriggerInfo {
 
 	bool skip;
 	bool backup;
+	bool backup_url;
 	bool custom_fields;
 	bool deny;
 
