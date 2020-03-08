@@ -32,3 +32,5 @@ docs/Data
 docs/html
 docs/sql
 
+.vscode/c_cpp_properties.json
+.vscode/settings.json

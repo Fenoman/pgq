@@ -195,6 +195,9 @@ void pgq_encode_cstring(StringInfo tbuf, const char *str, enum PgqEncode encodin
 		escape_json(tbuf, str);
 		break;
 
+	case TBUF_SKIP_JSON:
+		break;
+
 	default:
 		elog(ERROR, "bad encoding");
 	}

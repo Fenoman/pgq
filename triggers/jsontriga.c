@@ -224,6 +224,16 @@ static void pgq_jsonenc_row(PgqTriggerEvent *ev, HeapTuple row, StringInfo buf)
 			col_value = SPI_getvalue(row, tupdesc, i + 1);
 			appendStringInfoString(buf, col_value);
 			break;
+		
+		case JSONOID:
+			col_value = SPI_getvalue(row, tupdesc, i + 1);
+			pgq_encode_cstring(buf, col_value, TBUF_SKIP_JSON);
+			break;
+
+		case JSONBOID:
+			col_value = SPI_getvalue(row, tupdesc, i + 1);
+			pgq_encode_cstring(buf, col_value, TBUF_SKIP_JSON);
+			break;
 
 		default:
 			col_value = SPI_getvalue(row, tupdesc, i + 1);
