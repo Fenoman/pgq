@@ -77,7 +77,7 @@ void pgq_urlenc_row(PgqTriggerEvent *ev, HeapTuple row, StringInfo buf)
  *    ev_type   - operation type, I/U/D
  *    ev_data   - urlencoded column values
  *    ev_extra1 - table name
- *    ev_extra2 - optional urlencoded backup
+ *    ev_extra2 - optional json/urlencoded backup
  */
 Datum pgq_logutriga(PG_FUNCTION_ARGS)
 {

@@ -11,14 +11,14 @@
 --      argX - any number of optional arg, in any order
 --
 -- Optional arguments:
---      SKIP                - The actual operation should be skipped (BEFORE trigger)
---      exclude=col1[,col2]  - don't look at the specified arguments
---      include=col1[,col2]  - look only at the specified arguments
---      pkey=col1[,col2]    - Set pkey fields for the table, autodetection will be skipped
---      backup              - Put urlencoded contents of old row to ev_extra2
---      colname=EXPR        - Override field value with SQL expression.  Can reference table
---                            columns.  colname can be: ev_type, ev_data, ev_extra1 .. ev_extra4
---      when=EXPR           - If EXPR returns false, don't insert event.
+--      SKIP                    - The actual operation should be skipped (BEFORE trigger)
+--      exclude=col1[,col2]     - don't look at the specified arguments (PK will never be skipped)
+--      include=col1[,col2]     - look only at the specified arguments (PK will never be skipped)
+--      pkey=col1[,col2]        - Set pkey fields for the table, autodetection will be skipped
+--      backup OR backup_url    - Put JSON/urlencoded contents of old row to ev_extra2
+--      colname=EXPR            - Override field value with SQL expression.  Can reference table
+--                                  columns.  colname can be: ev_type, ev_data, ev_extra1 .. ev_extra4
+--      when=EXPR               - If EXPR returns false, don't insert event.
 --
 -- Queue event fields:
 --      ev_type      - I/U/D ':' pkey_column_list
@@ -52,13 +52,14 @@ AS '$libdir/pgq_triggers', 'pgq_jsontriga' LANGUAGE C;
 --      argX - any number of optional arg, in any order
 --
 -- Optinal arguments:
---      SKIP                - The actual operation should be skipped (BEFORE trigger)
---      ignore=col1[,col2]  - don't look at the specified arguments
---      pkey=col1[,col2]    - Set pkey fields for the table, autodetection will be skipped
---      backup              - Put urlencoded contents of old row to ev_extra2
---      colname=EXPR        - Override field value with SQL expression.  Can reference table
---                            columns.  colname can be: ev_type, ev_data, ev_extra1 .. ev_extra4
---      when=EXPR           - If EXPR returns false, don't insert event.
+--      SKIP                    - The actual operation should be skipped (BEFORE trigger)
+--      exclude=col1[,col2]     - don't look at the specified arguments (PK will never be skipped)
+--      include=col1[,col2]     - look only at the specified arguments (PK will never be skipped)
+--      pkey=col1[,col2]        - Set pkey fields for the table, autodetection will be skipped
+--      backup OR backup_url    - Put JSON/urlencoded contents of old row to ev_extra2
+--      colname=EXPR            - Override field value with SQL expression.  Can reference table
+--                                  columns.  colname can be: ev_type, ev_data, ev_extra1 .. ev_extra4
+--      when=EXPR               - If EXPR returns false, don't insert event.
 --
 -- Queue event fields:
 --      ev_type      - I/U/D ':' pkey_column_list
@@ -91,13 +92,14 @@ AS '$libdir/pgq_triggers', 'pgq_logutriga' LANGUAGE C;
 --      argX - any number of optional arg, in any order
 --
 -- Optinal arguments:
---      SKIP                - The actual operation should be skipped (BEFORE trigger)
---      ignore=col1[,col2]  - don't look at the specified arguments
---      pkey=col1[,col2]    - Set pkey fields for the table, PK autodetection will be skipped
---      backup              - Put urlencoded contents of old row to ev_extra2
---      colname=EXPR        - Override field value with SQL expression.  Can reference table
---                            columns.  colname can be: ev_type, ev_data, ev_extra1 .. ev_extra4
---      when=EXPR           - If EXPR returns false, don't insert event.
+--      SKIP                    - The actual operation should be skipped (BEFORE trigger)
+--      exclude=col1[,col2]     - don't look at the specified arguments (PK will never be skipped)
+--      include=col1[,col2]     - look only at the specified arguments (PK will never be skipped)
+--      pkey=col1[,col2]        - Set pkey fields for the table, PK autodetection will be skipped
+--      backup OR backup_url    - Put JSON/urlencoded contents of old row to ev_extra2
+--      colname=EXPR            - Override field value with SQL expression.  Can reference table
+--                                  columns.  colname can be: ev_type, ev_data, ev_extra1 .. ev_extra4
+--      when=EXPR               - If EXPR returns false, don't insert event.
 --
 -- Queue event fields:
 --    ev_type     - I/U/D

@@ -35,7 +35,7 @@ Datum pgq_sqltriga(PG_FUNCTION_ARGS);
  *    ev_type   - operation type, I/U/D/R
  *    ev_data   - urlencoded column values
  *    ev_extra1 - table name
- *    ev_extra2 - optional urlencoded backup
+ *    ev_extra2 - optional json/urlencoded backup
  */
 Datum pgq_sqltriga(PG_FUNCTION_ARGS)
 {

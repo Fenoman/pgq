@@ -288,7 +288,7 @@ static void fill_json_type(PgqTriggerEvent *ev, HeapTuple row, StringInfo ev_typ
  *    ev_type   - operation type, I/U/D
  *    ev_data   - json column values
  *    ev_extra1 - table name
- *    ev_extra2 - optional urlencoded backup
+ *    ev_extra2 - optional json/urlencoded backup
  */
 Datum pgq_jsontriga(PG_FUNCTION_ARGS)
 {
