@@ -63,7 +63,8 @@ struct PgqTriggerInfo {
 	bool custom_fields;
 	bool deny;
 
-	const char *ignore_list;
+	const char *exclude_list;
+	const char *include_list;
 	const char *pkey_list;
 
 	struct QueryBuilder *query[EV_NFIELDS];

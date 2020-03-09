@@ -343,8 +343,10 @@ static void clean_info(struct PgqTableInfo *info, bool found)
 
 	for (tg = info->tg_cache; tg; ) {
 		tmp = tg->next;
-		if (tg->ignore_list)
-			pfree((void *)tg->ignore_list);
+		if (tg->exclude_list)
+			pfree((void *)tg->exclude_list);
+		if (tg->include_list)
+			pfree((void *)tg->include_list);
 		if (tg->pkey_list)
 			pfree((void *)tg->pkey_list);
 		for (i = 0; i < EV_NFIELDS; i++) {
@@ -453,8 +455,10 @@ static void parse_newstyle_args(PgqTriggerEvent *ev, TriggerData *tg)
 		const char *arg = tg->tg_trigger->tgargs[i];
 		if (strcmp(arg, "SKIP") == 0)
 			ev->tgargs->skip = true;
-		else if (strncmp(arg, "ignore=", 7) == 0)
-			ev->tgargs->ignore_list = MemoryContextStrdup(tbl_cache_ctx, arg + 7);
+		else if (strncmp(arg, "exclude=", 8) == 0)
+			ev->tgargs->exclude_list = MemoryContextStrdup(tbl_cache_ctx, arg + 8);
+		else if (strncmp(arg, "include=", 8) == 0)
+			ev->tgargs->include_list = MemoryContextStrdup(tbl_cache_ctx, arg + 8);
 		else if (strncmp(arg, "pkey=", 5) == 0)
 			ev->tgargs->pkey_list = MemoryContextStrdup(tbl_cache_ctx, arg + 5);
 		else if (strcmp(arg, "backup") == 0)
@@ -482,8 +486,11 @@ static void parse_newstyle_args(PgqTriggerEvent *ev, TriggerData *tg)
 	}
 
 	if (ev->op_type == 'R') {
-		if (ev->tgargs->ignore_list)
-			elog(ERROR, "Column ignore does not make sense for truncate trigger");
+		if (ev->tgargs->exclude_list)
+			elog(ERROR, "Column exclude does not make sense for truncate trigger");
+		if (ev->tgargs->include_list)
+			elog(ERROR, "Column include does not make sense for truncate trigger");
+		if (ev->tgargs->pkey_list)
 		if (ev->tgargs->pkey_list)
 			elog(ERROR, "Custom pkey_list does not make sense for truncate trigger");
 		if (ev->tgargs->backup)
@@ -646,12 +653,19 @@ bool pgqtriga_skip_col(PgqTriggerEvent *ev, int i, int attkind_idx)
 		return true;
 	}
 
-	if (ev->attkind) {
+	if (ev->attkind) 
+	{
 		if (attkind_idx >= ev->attkind_len)
 			return true;
 		return ev->attkind[attkind_idx] == 'i';
-	} else if (ev->tgargs->ignore_list) {
-		return pgq_strlist_contains(ev->tgargs->ignore_list, name);
+	} 
+	else if (ev->tgargs->include_list) 
+	{
+		return !pgq_strlist_contains(ev->tgargs->include_list, name);
+	}
+	else if (ev->tgargs->exclude_list) 
+	{
+		return pgq_strlist_contains(ev->tgargs->exclude_list, name);
 	}
 	return false;
 }
@@ -841,7 +855,7 @@ static void override_fields(struct PgqTriggerEvent *ev)
 }
 
 /*
- * need to ignore UPDATE where only ignored columns change
+ * need to ignore UPDATE where only excluded columns change
  */
 int pgq_is_interesting_change(PgqTriggerEvent *ev, TriggerData *tg)
 {
@@ -861,7 +875,8 @@ int pgq_is_interesting_change(PgqTriggerEvent *ev, TriggerData *tg)
 	if (!TRIGGER_FIRED_BY_UPDATE(tg->tg_event))
 		return 1;
 
-	for (i = 0; i < tupdesc->natts; i++) {
+	for (i = 0; i < tupdesc->natts; i++) 
+	{
 		/*
 		 * Ignore dropped columns
 		 */
@@ -870,7 +885,7 @@ int pgq_is_interesting_change(PgqTriggerEvent *ev, TriggerData *tg)
 		attkind_idx++;
 
 		is_pk = pgqtriga_is_pkey(ev, i, attkind_idx);
-		if (!is_pk && ev->tgargs->ignore_list == NULL)
+		if (!is_pk && ev->tgargs->exclude_list == NULL && ev->tgargs->include_list == NULL)
 			continue;
 
 		old_value = SPI_getbinval(old_row, tupdesc, i + 1, &old_isnull);
