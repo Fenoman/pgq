@@ -653,6 +653,11 @@ bool pgqtriga_skip_col(PgqTriggerEvent *ev, int i, int attkind_idx)
 		return true;
 	}
 
+	if(pgqtriga_is_pkey(ev, i, attkind_idx))
+	{
+		return false;
+	}
+
 	if (ev->attkind) 
 	{
 		if (attkind_idx >= ev->attkind_len)
