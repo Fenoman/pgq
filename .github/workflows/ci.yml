@@ -12,8 +12,8 @@ on:
 jobs:
 
   linux:
-    name: "Ubuntu 18.04 + PostgreSQL ${{matrix.PGVER}}"
-    runs-on: ubuntu-18.04
+    name: "Ubuntu 20.04 + PostgreSQL ${{matrix.PGVER}}"
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         PGVER: [10, 11, 12, 13]
@@ -42,8 +42,8 @@ jobs:
           echo "::endgroup::"
 
           # tune environment
-          echo "::add-path::/usr/lib/postgresql/${{matrix.PGVER}}/bin"
-          echo "::set-env name=PGHOST::/tmp"
+          echo "/usr/lib/postgresql/${{matrix.PGVER}}/bin" >> $GITHUB_PATH
+          echo "PGHOST=/tmp" >> $GITHUB_ENV
 
           dpkg -l postgres\* libpq\* bison\* flex\* gcc\* clang\* libllvm\*
 
