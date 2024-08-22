@@ -23,6 +23,9 @@
 #if PG_VERSION_NUM >= 90200
 #include <utils/json.h>
 #endif
+#if PG_VERSION_NUM >= 90300
+#include <access/htup_details.h>
+#endif
 
 #include "stringutil.h"
 
