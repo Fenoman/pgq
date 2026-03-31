@@ -59,10 +59,12 @@ struct PgqTriggerInfo {
 
 	bool skip;
 	bool backup;
+	bool backup_url;
 	bool custom_fields;
 	bool deny;
 
-	const char *ignore_list;
+	const char *exclude_list;
+	const char *include_list;
 	const char *pkey_list;
 
 	struct QueryBuilder *query[EV_NFIELDS];
@@ -86,7 +88,7 @@ struct PgqTableInfo {
 };
 
 /* common.c */
-void pgq_prepare_event(struct PgqTriggerEvent *ev, TriggerData *tg, bool newstyle, bool jsonbackup);
+void pgq_prepare_event(struct PgqTriggerEvent *ev, TriggerData *tg, bool newstyle);
 void pgq_simple_insert(const char *queue_name, Datum ev_type, Datum ev_data,
 		       Datum ev_extra1, Datum ev_extra2, Datum ev_extra3, Datum ev_extra4);
 bool pgqtriga_skip_col(PgqTriggerEvent *ev, int i, int attkind_idx);
@@ -109,4 +111,3 @@ int pgq_is_interesting_change(PgqTriggerEvent *ev, TriggerData *tg);
 #ifndef TRIGGER_FIRED_BY_TRUNCATE
 #define TRIGGER_FIRED_BY_TRUNCATE(tg)	0
 #endif
-

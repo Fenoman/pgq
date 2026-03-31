@@ -77,7 +77,7 @@ void pgq_urlenc_row(PgqTriggerEvent *ev, HeapTuple row, StringInfo buf)
  *    ev_type   - operation type, I/U/D
  *    ev_data   - urlencoded column values
  *    ev_extra1 - table name
- *    ev_extra2 - optional urlencoded backup
+ *    ev_extra2 - optional JSON/urlencoded backup of old row
  */
 Datum pgq_logutriga(PG_FUNCTION_ARGS)
 {
@@ -107,7 +107,7 @@ Datum pgq_logutriga(PG_FUNCTION_ARGS)
 	if (SPI_connect() < 0)
 		elog(ERROR, "logutriga: SPI_connect() failed");
 
-	pgq_prepare_event(&ev, tg, true, false);
+	pgq_prepare_event(&ev, tg, true);
 	skip = ev.tgargs->skip;
 
 	appendStringInfoString(ev.field[EV_EXTRA1], ev.info->table_name);

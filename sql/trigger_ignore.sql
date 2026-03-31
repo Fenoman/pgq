@@ -13,11 +13,11 @@ $$ language plpgsql;
 create table trigger_ignore (dat1 text primary key, col1 text, col2 text);
 
 create trigger ignore_trig_0 after insert or update or delete on trigger_ignore
-for each row execute procedure pgq.jsontriga('jsontriga', 'ignore=col2');
+for each row execute procedure pgq.jsontriga('json_ignore', 'ignore=col2');
 create trigger ignore_trig_1 after insert or update or delete on trigger_ignore
-for each row execute procedure pgq.logutriga('logutriga', 'ignore=col2');
+for each row execute procedure pgq.logutriga('log_exclude', 'exclude=col2');
 create trigger ignore_trig_2 after insert or update or delete on trigger_ignore
-for each row execute procedure pgq.sqltriga('sqltriga', 'ignore=col2');
+for each row execute procedure pgq.sqltriga('sql_include', 'include=col1');
 
 -- test insert
 insert into trigger_ignore values ('a', 'col1', 'col2');
@@ -32,8 +32,10 @@ update trigger_ignore set col2 = 'col2z' where dat1 = 'a';
 -- test null update
 update trigger_ignore set col2 = col2 where dat1 = 'a';
 
+-- test primary key updates are never ignored
+update trigger_ignore set dat1 = 'b', col2 = 'col2b' where dat1 = 'a';
+
 -- restore
 drop table trigger_ignore;
 \set ECHO none
 \i functions/pgq.insert_event.sql
-

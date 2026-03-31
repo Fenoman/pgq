@@ -11,22 +11,39 @@ end;
 $$ language plpgsql;
 create table trigger_backup (nr int4 primary key, col1 text, stamp date);
 create trigger backup_trig_0 after insert or update or delete on trigger_backup
-for each row execute procedure pgq.jsontriga('jsontriga', 'backup');
+for each row execute procedure pgq.jsontriga('json_backup', 'backup');
 create trigger backup_trig_1 after insert or update or delete on trigger_backup
-for each row execute procedure pgq.logutriga('logutriga', 'backup');
--- sqltriga/pl cannot do urlenc
---create trigger backup_trig_2 after insert or update or delete on trigger_backup
---for each row execute procedure pgq.sqltriga('sqltriga', 'backup');
+for each row execute procedure pgq.logutriga('log_backup', 'backup');
+create trigger backup_trig_2 after insert or update or delete on trigger_backup
+for each row execute procedure pgq.sqltriga('sql_backup', 'backup');
+create trigger backup_trig_3 after insert or update or delete on trigger_backup
+for each row execute procedure pgq.jsontriga('json_backup_url', 'backup_url');
+create trigger backup_trig_4 after insert or update or delete on trigger_backup
+for each row execute procedure pgq.logutriga('log_backup_url', 'backup_url');
+create trigger backup_trig_5 after insert or update or delete on trigger_backup
+for each row execute procedure pgq.sqltriga('sql_backup_url', 'backup_url');
 -- test insert
 insert into trigger_backup (nr, col1, stamp) values (1, 'text', '1999-02-03');
-WARNING:  insert_event(q=[jsontriga], t=[{"op":"INSERT","table":["public","trigger_backup"],"pkey":["nr"]}], d=[{"nr":1,"col1":"text","stamp":"1999-02-03"}], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
-WARNING:  insert_event(q=[logutriga], t=[I:nr], d=[nr=1&col1=text&stamp=1999-02-03], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[json_backup], t=[{"op":"INSERT","table":["public","trigger_backup"],"pkey":["nr"]}], d=[{"nr":1,"col1":"text","stamp":"1999-02-03"}], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[log_backup], t=[I:nr], d=[nr=1&col1=text&stamp=1999-02-03], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[sql_backup], t=[I], d=[(nr,col1,stamp) values ('1','text','1999-02-03')], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[json_backup_url], t=[{"op":"INSERT","table":["public","trigger_backup"],"pkey":["nr"]}], d=[{"nr":1,"col1":"text","stamp":"1999-02-03"}], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[log_backup_url], t=[I:nr], d=[nr=1&col1=text&stamp=1999-02-03], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[sql_backup_url], t=[I], d=[(nr,col1,stamp) values ('1','text','1999-02-03')], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
 update trigger_backup set col1 = 'col1x' where nr=1;
-WARNING:  insert_event(q=[jsontriga], t=[{"op":"UPDATE","table":["public","trigger_backup"],"pkey":["nr"]}], d=[{"nr":1,"col1":"col1x","stamp":"1999-02-03"}], 1=[public.trigger_backup], 2=[{"nr":1,"col1":"text","stamp":"1999-02-03"}], 3=[<NULL>], 4=[<NULL>])
-WARNING:  insert_event(q=[logutriga], t=[U:nr], d=[nr=1&col1=col1x&stamp=1999-02-03], 1=[public.trigger_backup], 2=[nr=1&col1=text&stamp=1999-02-03], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[json_backup], t=[{"op":"UPDATE","table":["public","trigger_backup"],"pkey":["nr"]}], d=[{"nr":1,"col1":"col1x","stamp":"1999-02-03"}], 1=[public.trigger_backup], 2=[{"nr":1,"col1":"text","stamp":"1999-02-03"}], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[log_backup], t=[U:nr], d=[nr=1&col1=col1x&stamp=1999-02-03], 1=[public.trigger_backup], 2=[{"nr":1,"col1":"text","stamp":"1999-02-03"}], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[sql_backup], t=[U], d=[col1='col1x' where nr='1'], 1=[public.trigger_backup], 2=[{"nr":1,"col1":"text","stamp":"1999-02-03"}], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[json_backup_url], t=[{"op":"UPDATE","table":["public","trigger_backup"],"pkey":["nr"]}], d=[{"nr":1,"col1":"col1x","stamp":"1999-02-03"}], 1=[public.trigger_backup], 2=[nr=1&col1=text&stamp=1999-02-03], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[log_backup_url], t=[U:nr], d=[nr=1&col1=col1x&stamp=1999-02-03], 1=[public.trigger_backup], 2=[nr=1&col1=text&stamp=1999-02-03], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[sql_backup_url], t=[U], d=[col1='col1x' where nr='1'], 1=[public.trigger_backup], 2=[nr=1&col1=text&stamp=1999-02-03], 3=[<NULL>], 4=[<NULL>])
 delete from trigger_backup where nr=1;
-WARNING:  insert_event(q=[jsontriga], t=[{"op":"DELETE","table":["public","trigger_backup"],"pkey":["nr"]}], d=[{"nr":1,"col1":"col1x","stamp":"1999-02-03"}], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
-WARNING:  insert_event(q=[logutriga], t=[D:nr], d=[nr=1&col1=col1x&stamp=1999-02-03], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[json_backup], t=[{"op":"DELETE","table":["public","trigger_backup"],"pkey":["nr"]}], d=[{"nr":1,"col1":"col1x","stamp":"1999-02-03"}], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[log_backup], t=[D:nr], d=[nr=1&col1=col1x&stamp=1999-02-03], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[sql_backup], t=[D], d=[nr='1'], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[json_backup_url], t=[{"op":"DELETE","table":["public","trigger_backup"],"pkey":["nr"]}], d=[{"nr":1,"col1":"col1x","stamp":"1999-02-03"}], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[log_backup_url], t=[D:nr], d=[nr=1&col1=col1x&stamp=1999-02-03], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
+WARNING:  insert_event(q=[sql_backup_url], t=[D], d=[nr='1'], 1=[public.trigger_backup], 2=[<NULL>], 3=[<NULL>], 4=[<NULL>])
 -- restore
 drop table trigger_backup;
 \set ECHO none

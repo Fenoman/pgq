@@ -15,14 +15,22 @@ $$ language plpgsql;
 create table trigger_backup (nr int4 primary key, col1 text, stamp date);
 
 create trigger backup_trig_0 after insert or update or delete on trigger_backup
-for each row execute procedure pgq.jsontriga('jsontriga', 'backup');
+for each row execute procedure pgq.jsontriga('json_backup', 'backup');
 
 create trigger backup_trig_1 after insert or update or delete on trigger_backup
-for each row execute procedure pgq.logutriga('logutriga', 'backup');
+for each row execute procedure pgq.logutriga('log_backup', 'backup');
 
--- sqltriga/pl cannot do urlenc
---create trigger backup_trig_2 after insert or update or delete on trigger_backup
---for each row execute procedure pgq.sqltriga('sqltriga', 'backup');
+create trigger backup_trig_2 after insert or update or delete on trigger_backup
+for each row execute procedure pgq.sqltriga('sql_backup', 'backup');
+
+create trigger backup_trig_3 after insert or update or delete on trigger_backup
+for each row execute procedure pgq.jsontriga('json_backup_url', 'backup_url');
+
+create trigger backup_trig_4 after insert or update or delete on trigger_backup
+for each row execute procedure pgq.logutriga('log_backup_url', 'backup_url');
+
+create trigger backup_trig_5 after insert or update or delete on trigger_backup
+for each row execute procedure pgq.sqltriga('sql_backup_url', 'backup_url');
 
 -- test insert
 insert into trigger_backup (nr, col1, stamp) values (1, 'text', '1999-02-03');
@@ -33,4 +41,3 @@ delete from trigger_backup where nr=1;
 drop table trigger_backup;
 \set ECHO none
 \i functions/pgq.insert_event.sql
-

@@ -206,7 +206,7 @@ WARNING:  insert_event(q=[sqltriga], t=[I], d=[(nr,val,arr) values ('1','a0eebc9
 (1 row)
 
 select typetest('json', '{"a": [false, null, true]}');
-WARNING:  insert_event(q=[jsontriga], t=[{"op":"INSERT","table":["public","ttest"],"pkey":[]}], d=[{"nr":1,"val":"{\"a\": [false, null, true]}","arr":"{\"{\\\"a\\\": [false, null, true]}\",\"{\\\"a\\\": [false, null, true]}\"}"}])
+WARNING:  insert_event(q=[jsontriga], t=[{"op":"INSERT","table":["public","ttest"],"pkey":[]}], d=[{"nr":1,"val":{"a": [false, null, true]},"arr":"{\"{\\\"a\\\": [false, null, true]}\",\"{\\\"a\\\": [false, null, true]}\"}"}])
 WARNING:  insert_event(q=[logutriga], t=[I:], d=[nr=1&val=%7b%22a%22%3a+%5bfalse%2c+null%2c+true%5d%7d&arr=%7b%22%7b%5c%22a%5c%22%3a+%5bfalse%2c+null%2c+true%5d%7d%22%2c%22%7b%5c%22a%5c%22%3a+%5bfalse%2c+null%2c+true%5d%7d%22%7d])
 WARNING:  insert_event(q=[sqltriga], t=[I], d=[(nr,val,arr) values ('1','{"a": [false, null, true]}',E'{"{\\"a\\": [false, null, true]}","{\\"a\\": [false, null, true]}"}')])
  typetest 
@@ -215,9 +215,27 @@ WARNING:  insert_event(q=[sqltriga], t=[I], d=[(nr,val,arr) values ('1','{"a": [
 (1 row)
 
 select typetest('json', '[1,2,3]');
-WARNING:  insert_event(q=[jsontriga], t=[{"op":"INSERT","table":["public","ttest"],"pkey":[]}], d=[{"nr":1,"val":"[1,2,3]","arr":"{\"[1,2,3]\",\"[1,2,3]\"}"}])
+WARNING:  insert_event(q=[jsontriga], t=[{"op":"INSERT","table":["public","ttest"],"pkey":[]}], d=[{"nr":1,"val":[1,2,3],"arr":"{\"[1,2,3]\",\"[1,2,3]\"}"}])
 WARNING:  insert_event(q=[logutriga], t=[I:], d=[nr=1&val=%5b1%2c2%2c3%5d&arr=%7b%22%5b1%2c2%2c3%5d%22%2c%22%5b1%2c2%2c3%5d%22%7d])
 WARNING:  insert_event(q=[sqltriga], t=[I], d=[(nr,val,arr) values ('1','[1,2,3]','{"[1,2,3]","[1,2,3]"}')])
+ typetest 
+----------
+ 
+(1 row)
+
+select typetest('jsonb', '{"a": [false, null, true]}');
+WARNING:  insert_event(q=[jsontriga], t=[{"op":"INSERT","table":["public","ttest"],"pkey":[]}], d=[{"nr":1,"val":{"a": [false, null, true]},"arr":"{\"{\\\"a\\\": [false, null, true]}\",\"{\\\"a\\\": [false, null, true]}\"}"}])
+WARNING:  insert_event(q=[logutriga], t=[I:], d=[nr=1&val=%7b%22a%22%3a+%5bfalse%2c+null%2c+true%5d%7d&arr=%7b%22%7b%5c%22a%5c%22%3a+%5bfalse%2c+null%2c+true%5d%7d%22%2c%22%7b%5c%22a%5c%22%3a+%5bfalse%2c+null%2c+true%5d%7d%22%7d])
+WARNING:  insert_event(q=[sqltriga], t=[I], d=[(nr,val,arr) values ('1','{"a": [false, null, true]}',E'{"{\\"a\\": [false, null, true]}","{\\"a\\": [false, null, true]}"}')])
+ typetest 
+----------
+ 
+(1 row)
+
+select typetest('jsonb', '[1,2,3]');
+WARNING:  insert_event(q=[jsontriga], t=[{"op":"INSERT","table":["public","ttest"],"pkey":[]}], d=[{"nr":1,"val":[1, 2, 3],"arr":"{\"[1, 2, 3]\",\"[1, 2, 3]\"}"}])
+WARNING:  insert_event(q=[logutriga], t=[I:], d=[nr=1&val=%5b1%2c+2%2c+3%5d&arr=%7b%22%5b1%2c+2%2c+3%5d%22%2c%22%5b1%2c+2%2c+3%5d%22%7d])
+WARNING:  insert_event(q=[sqltriga], t=[I], d=[(nr,val,arr) values ('1','[1, 2, 3]','{"[1, 2, 3]","[1, 2, 3]"}')])
  typetest 
 ----------
  

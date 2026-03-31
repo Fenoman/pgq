@@ -225,6 +225,18 @@ void pgq_jsonenc_row(PgqTriggerEvent *ev, HeapTuple row, StringInfo buf)
 			appendStringInfoString(buf, col_value);
 			break;
 
+		case JSONOID:
+			col_value = SPI_getvalue(row, tupdesc, i + 1);
+			appendStringInfoString(buf, col_value);
+			break;
+
+#if PG_VERSION_NUM >= 90400
+		case JSONBOID:
+			col_value = SPI_getvalue(row, tupdesc, i + 1);
+			appendStringInfoString(buf, col_value);
+			break;
+#endif
+
 		default:
 			col_value = SPI_getvalue(row, tupdesc, i + 1);
 			pgq_encode_cstring(buf, col_value, TBUF_QUOTE_JSON);
@@ -278,7 +290,7 @@ static void fill_json_type(PgqTriggerEvent *ev, HeapTuple row, StringInfo ev_typ
  *    ev_type   - operation type, I/U/D
  *    ev_data   - json-encoded column values
  *    ev_extra1 - table name
- *    ev_extra2 - optional json-encoded backup of old row
+ *    ev_extra2 - optional JSON/urlencoded backup of old row
  */
 Datum pgq_jsontriga(PG_FUNCTION_ARGS)
 {
@@ -308,7 +320,7 @@ Datum pgq_jsontriga(PG_FUNCTION_ARGS)
 	if (SPI_connect() < 0)
 		elog(ERROR, "logutriga: SPI_connect() failed");
 
-	pgq_prepare_event(&ev, tg, true, true);
+	pgq_prepare_event(&ev, tg, true);
 	skip = ev.tgargs->skip;
 
 	appendStringInfoString(ev.field[EV_EXTRA1], ev.info->table_name);

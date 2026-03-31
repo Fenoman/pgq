@@ -82,9 +82,10 @@ select typetest('box', '((1.1, 2.1), (5.6, 5.7))');
 select typetest('uuid', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11');
 select typetest('json', '{"a": [false, null, true]}');
 select typetest('json', '[1,2,3]');
+select typetest('jsonb', '{"a": [false, null, true]}');
+select typetest('jsonb', '[1,2,3]');
 
 -- restore
 drop function typetest(text,text);
 \set ECHO none
 \i functions/pgq.insert_event.sql
-

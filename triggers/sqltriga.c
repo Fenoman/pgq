@@ -35,7 +35,7 @@ Datum pgq_sqltriga(PG_FUNCTION_ARGS);
  *    ev_type   - operation type, I/U/D/R
  *    ev_data   - partial SQL
  *    ev_extra1 - table name
- *    ev_extra2 - optional urlencoded backup
+ *    ev_extra2 - optional JSON/urlencoded backup of old row
  */
 Datum pgq_sqltriga(PG_FUNCTION_ARGS)
 {
@@ -60,7 +60,7 @@ Datum pgq_sqltriga(PG_FUNCTION_ARGS)
 	if (SPI_connect() < 0)
 		elog(ERROR, "sqltriga: SPI_connect() failed");
 
-	pgq_prepare_event(&ev, tg, true, false);
+	pgq_prepare_event(&ev, tg, true);
 	skip = ev.tgargs->skip;
 
 	appendStringInfoChar(ev.field[EV_TYPE], ev.op_type);
