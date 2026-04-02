@@ -2,7 +2,7 @@
 EXTENSION = pgq
 
 EXT_VERSION = 3.5.1
-EXT_OLD_VERSIONS = 3.2 3.2.3 3.2.6 3.3.1 3.4 3.4.1 3.4.2 3.5
+EXT_OLD_VERSIONS = 3.2 3.2.3 3.2.6 3.3.1 3.4 3.4.1 3.4.2 3.4.3 3.5
 
 PGQ_TESTS = pgq_core pgq_core_disabled pgq_core_tx_limit \
 	    pgq_session_role pgq_perms \
@@ -74,4 +74,3 @@ doxsync:
 	for m in pgq_coop pgq_node pgq_ext londiste; do \
 		cp docs/Topics.txt docs/Languages.txt ../$$m/docs; \
 	done
-
